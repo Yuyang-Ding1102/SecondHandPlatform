@@ -36,7 +36,7 @@ function Main({ isLoggedIn, handleLoggedIn, handleLogout }) {
             isLoggedIn ? (
               <Navigate to="/items" replace />
             ) : (
-              <Login handleLoggedIn={handleLoggedIn} />
+              <Login handleLoggedIn={handleLoggedIn} /> //handling login
             )
           }
         />
@@ -56,6 +56,8 @@ function Main({ isLoggedIn, handleLoggedIn, handleLogout }) {
             </ProtectedRoute>
           }
         />
+
+        {/* For testing Item.js purpose <Route path="/items" element={<Items />} />*/}
 
         <Route
           path="/mylistings"
