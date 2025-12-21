@@ -1,7 +1,8 @@
 package utils
 
 import (
-	"github.com/gin-gonic/gin"
+	"encoding/json"
+	"net/http"
 )
 
 // Response 统一响应结构
@@ -11,26 +12,32 @@ type Response struct {
 	Data    interface{} `json:"data,omitempty"`
 }
 
-// SuccessResponse 成功响应
-func SuccessResponse(c *gin.Context, statusCode int, data interface{}) {
-	c.JSON(statusCode, Response{
+// SendSuccessResponse 发送成功响应
+func SendSuccessResponse(w http.ResponseWriter, data interface{}) {
+	w.Header().Set("Content-Type", "application/json") // 设置响应头：告诉浏览器"我要返回 JSON 格式的数据"
+	w.WriteHeader(http.StatusOK) // 设置响应状态码为 200 OK
+	json.NewEncoder(w).Encode(Response{ // 构造并发送 JSON 响应：
 		Success: true,
 		Data:    data,
 	})
 }
 
-// SuccessWithMessage 成功响应（带消息）
-func SuccessWithMessage(c *gin.Context, statusCode int, message string, data interface{}) {
-	c.JSON(statusCode, Response{
+// SendSuccessWithMessage 发送成功响应（带消息）
+func SendSuccessWithMessage(w http.ResponseWriter, message string, data interface{}) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(Response{
 		Success: true,
 		Message: message,
 		Data:    data,
 	})
 }
 
-// ErrorResponse 错误响应
-func ErrorResponse(c *gin.Context, statusCode int, message string) {
-	c.JSON(statusCode, Response{
+// SendErrorResponse 发送错误响应
+func SendErrorResponse(w http.ResponseWriter, statusCode int, message string) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(statusCode)
+	json.NewEncoder(w).Encode(Response{
 		Success: false,
 		Message: message,
 	})
