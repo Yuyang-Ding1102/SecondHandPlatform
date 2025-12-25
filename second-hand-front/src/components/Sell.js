@@ -40,10 +40,11 @@ function Sell({ handleLogout }) {
   const [form] = Form.useForm();
   const [fileList, setFileList] = useState([]);
   const [submitting, setSubmitting] = useState(false);
+  const [isFormValid, setIsFormValid] = useState(false);
   const imageCount = fileList.length;
   const canPublish = useMemo(() => {
-    return imageCount >= 1 && imageCount <= 5 && !submitting;
-  }, [imageCount, submitting]);
+    return isFormValid && imageCount >= 1 && imageCount <= 5 && !submitting;
+  }, [isFormValid, imageCount, submitting]);
 
   const uploadProps = {
     multiple: true,
@@ -137,6 +138,13 @@ function Sell({ handleLogout }) {
             form={form}
             layout="vertical"
             onFinish={onFinish}
+            onFieldsChange={() => {
+              const hasErrors = form
+                .getFieldsError()
+                .some(({ errors }) => errors.length > 0);
+
+              setIsFormValid(!hasErrors);
+            }}
             initialValues={{
               negotiable: true,
               price: 0,
