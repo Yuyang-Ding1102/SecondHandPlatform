@@ -25,11 +25,11 @@ func main() {
 	}
 	defer database.CloseDB()
 
-	// TODO: 3. 初始化 GCS
-	// if err := database.InitGCS(); err != nil {
-	//     log.Fatalf("❌ Failed to initialize GCS: %v", err)
-	// }
-	// fmt.Println("✅ GCS initialized")
+	// 3. 初始化 GCS
+	if err := database.InitGCS(); err != nil {
+		log.Fatalf("❌ Failed to initialize GCS: %v", err)
+	}
+	fmt.Println("✅ GCS initialized")
 
 	// 4. 初始化路由
 	router := handlers.InitRouter()
