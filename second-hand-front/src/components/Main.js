@@ -50,14 +50,15 @@ function Main({ isLoggedIn, handleLoggedIn, handleLogout }) {
           }
         />
 
-        <Route
-          path="/items"
-          element={
-            <ProtectedRoute isLoggedIn={isLoggedIn}>
-              <Items />
-            </ProtectedRoute>
-          }
-        />
+        {/*<Route*/}
+        {/*  path="/items"*/}
+        {/*  element={*/}
+        {/*    <ProtectedRoute isLoggedIn={isLoggedIn}>*/}
+        {/*      <Items />*/}
+        {/*    </ProtectedRoute>*/}
+        {/*  }*/}
+        {/*/>*/}
+          <Route path="/items" element={<Items />} />
 
         {/* 我的发布 */}
         <Route

@@ -15,7 +15,7 @@ import {
 } from "@mui/material";
 
 function Login({ handleLoggedIn }) {
-    const [userName, setUsername] = useState("");
+    const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
@@ -24,8 +24,8 @@ function Login({ handleLoggedIn }) {
     const navigate = useNavigate();
 
     const handleSubmit = async () => {
-        if (!userName || !password) {
-            setError("Please enter a valid username and password");
+        if (!email || !password) {
+            setError("Please enter a valid email and password");
             return;
         }
         setLoading(true);
@@ -33,13 +33,22 @@ function Login({ handleLoggedIn }) {
 
         try {
             const res = await axios.post(`${BASE_URL}/login`, {
-                userName,
+                email,
                 password,
             });
-            handleLoggedIn(res.data.token);
-        } catch (err) {
-            setError("Invalid username or password");
-        } finally {
+            if (res.data.success) {
+                const token = res.data.data.token;
+                // token返回给APP，用户已经登陆成功了
+                handleLoggedIn(token);
+            }
+            else{
+                setError(res.data.message);
+            }
+        }
+        catch (err) {
+            setError(err.response?.data?.message || "Login Failed");
+        }
+        finally{
             setLoading(false);
         }
     };
@@ -75,11 +84,11 @@ function Login({ handleLoggedIn }) {
                     )}
 
                     <TextField
-                        label="Username"
+                        label="email"
                         fullWidth
                         margin="normal"
-                        value={userName}
-                        onChange={(e) => setUsername(e.target.value)}
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
                     />
 
                     <TextField
@@ -135,6 +144,7 @@ function Login({ handleLoggedIn }) {
                         >
                             {loading ? "Logging in..." : "Login"}
                         </Button>
+
                     </Box>
                 </Paper>
             </Box>
