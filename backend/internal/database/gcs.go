@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"math/rand"
 	"mime/multipart"
 	"os"
 	"path/filepath"
@@ -44,10 +45,11 @@ func InitGCS() error {
 func UploadFile(file multipart.File, fileHeader *multipart.FileHeader) (string, error) {
 	ctx := context.Background()
 
-	// 1. 生成唯一的文件名（使用时间戳 + 原文件名）
-	timestamp := time.Now().Unix()
+	// 1. 生成唯一的文件名（纳秒时间戳 + 随机数 + 扩展名）
+	timestamp := time.Now().UnixNano()           // 纳秒级时间戳
+	randomNum := rand.Intn(10000)                // 0-9999 的随机数
 	ext := filepath.Ext(fileHeader.Filename)
-	filename := fmt.Sprintf("%d_%s%s", timestamp, "image", ext)
+	filename := fmt.Sprintf("%d_%d%s", timestamp, randomNum, ext)
 
 	// 2. 获取 bucket
 	bucket := gcsClient.Bucket(config.AppConfig.GCSBucket)
@@ -70,7 +72,13 @@ func UploadFile(file multipart.File, fileHeader *multipart.FileHeader) (string, 
 		return "", fmt.Errorf("failed to close writer: %w", err)
 	}
 
-	// 7. 返回文件的公开 URL
+	// 7. 设置文件为公开可读
+	acl := obj.ACL()
+	if err := acl.Set(ctx, storage.AllUsers, storage.RoleReader); err != nil {
+		return "", fmt.Errorf("failed to set file public: %w", err)
+	}
+
+	// 8. 返回文件的公开 URL
 	// 格式：https://storage.googleapis.com/bucket-name/filename
 	url := fmt.Sprintf("https://storage.googleapis.com/%s/%s", config.AppConfig.GCSBucket, filename)
 	return url, nil
