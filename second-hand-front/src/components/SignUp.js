@@ -13,7 +13,7 @@ import { BASE_URL, TOKEN_KEY } from "../constants";
 import "../styles/SignUp.css";
 
 // import NavBar from "./NavBarNew";
-import NavBar from "../components/NavBarForLogin"; // updated by Xuanbo
+import NavBar from "../components/NavBarNew"; // updated by Xuanbo
 const SignUp = () => {
   const [formData, setFormData] = useState({
     email: "",
