@@ -102,26 +102,27 @@ function UploadPage({ handleLogout }) {
       const fd = new FormData();
       fd.append("title", values.title);
       fd.append("description", values.description);
-      fd.append("contact", values.contact);
+      fd.append("contact_info", values.contact); // 后端字段名为contact_info
       fd.append("price", String(values.price));
       fd.append("negotiable", String(values.negotiable));
-      fd.append("zipCode", values.zipCode);
+      fd.append("zip_code", values.zipCode); // 后端字段名为zip_code
 
       fileList.forEach((f) => {
         if (f.originFileObj) fd.append("images", f.originFileObj);
       });
 
-      await axios.post(`${BASE_URL}/items`, fd, {
+      // 后端upload接口
+      await axios.post(`${BASE_URL}/upload`, fd, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
 
       message.success("Published successfully!");
-      navigate("/mylistings"); //back to mylistings afte publication
+      navigate("/mylistings"); //back to mylistings after publication
     } catch (err) {
       console.error(err);
-      message.error(err.response?.data?.message || "Failed to publish item.");
+      message.error(err.response?.data?.error || "Failed to publish item.");
     } finally {
       setSubmitting(false);
     }
