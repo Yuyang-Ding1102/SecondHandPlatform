@@ -286,7 +286,9 @@ function MyListings() {
                       sx={{
                         width: "100%",
                         height: 200,
-                        objectFit: "cover", // 确保图片按比例裁剪，不会变形
+                        flexShrink: 0, // 防止图片被压缩
+                        objectFit: "contain", // 完整显示图片，不裁剪
+                        backgroundColor: "#f5f5f5", // 添加浅灰色背景
                       }}
                       image={
                         item.image_urls && item.image_urls.length > 0
@@ -295,7 +297,7 @@ function MyListings() {
                       }
                       alt={item.title}
                     />
-                    <CardContent sx={{ flexGrow: 1, py: 1.5, px: 2 }}>
+                    <CardContent sx={{ py: 1.5, px: 2, overflow: "hidden" }}>
                       <Typography
                         variant="subtitle1"
                         sx={{ fontWeight: 600, mb: 0.5 }}

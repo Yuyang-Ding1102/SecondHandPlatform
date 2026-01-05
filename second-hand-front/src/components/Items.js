@@ -140,6 +140,7 @@ function Items(props) {
         }}
       >
         <Container
+          maxWidth="xl"
           sx={{ flex: 1, display: "flex", flexDirection: "column", py: 3 }}
         >
           <Typography variant="h4" sx={{ fontWeight: "bold", mb: 3 }}>
@@ -168,7 +169,7 @@ function Items(props) {
 
           {/* 数据加载成功且有商品：显示商品网格 */}
           {!loading && !error && items.length > 0 && (
-            <Grid container spacing={3} sx={{ flex: 1 }}>
+            <Grid container spacing={3}>
               {items.map((item) => (
                 <Grid item key={item.id} xs={3}>
                   <Card
@@ -213,7 +214,9 @@ function Items(props) {
                       sx={{
                         width: "100%",
                         height: 200,
-                        objectFit: "cover",
+                        flexShrink: 0, // 防止图片被压缩
+                        objectFit: "contain", // 完整显示图片，不裁剪
+                        backgroundColor: "#f5f5f5", // 添加浅灰色背景
                       }}
                       image={
                         item.image_urls?.[0] ||
@@ -221,7 +224,7 @@ function Items(props) {
                       }
                       alt={item.title}
                     />
-                    <CardContent sx={{ flexGrow: 1, py: 1.5, px: 2 }}>
+                    <CardContent sx={{ py: 1.5, px: 2, overflow: "hidden" }}>
                       <Typography
                         variant="subtitle1"
                         sx={{ fontWeight: 600, mb: 0.5 }}
